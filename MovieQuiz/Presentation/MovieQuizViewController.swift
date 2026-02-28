@@ -28,10 +28,19 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
-    
+    @IBOutlet private weak var yesButton: UIButton!
+    @IBOutlet private weak var noButton: UIButton!
+
     private var currentQuestionIndex = 0 {
         didSet {
             showQuestion(QuizQuestionViewModel.from(currentQuestion))
+        }
+    }
+    
+    private var isActionsEnabled = true {
+        didSet {
+            yesButton.isEnabled = isActionsEnabled
+            noButton.isEnabled = isActionsEnabled
         }
     }
     
@@ -106,7 +115,6 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 20
 
-        // Нужно чтобы отработал didSet на currentQuestionIndex
         currentQuestionIndex = 0
     }
     
@@ -129,6 +137,7 @@ final class MovieQuizViewController: UIViewController {
         let borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         
         showQuestionImageBorder(color: borderColor)
+        isActionsEnabled = false
         
         if isCorrect {
             correctAnswers += 1
@@ -137,6 +146,8 @@ final class MovieQuizViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.hideQuestionImageBorder()
             self.showNextQuestionOrResults()
+
+            self.isActionsEnabled = true
         }
     }
     
@@ -159,10 +170,14 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showResults() {
+        let title = "Этот раунд окончен!"
+        let text = "Ваш результат \(correctAnswers)/\(questions.count)"
+        let buttonText = "Сыграть еще"
+
         let results = QuizResultsViewModel(
-            title: "Этот раунд окончен!",
-            text: "Ваш результат \(correctAnswers)/\(questions.count)",
-            buttonText: "Сыграть еще"
+            title: title,
+            text: text,
+            buttonText: buttonText
         )
 
         let alert = UIAlertController(title: results.title, message: results.text, preferredStyle: .alert)
