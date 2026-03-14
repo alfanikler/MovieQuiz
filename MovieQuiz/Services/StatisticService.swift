@@ -10,6 +10,9 @@ import Foundation
 final class StatisticService: StatisticServiceProtocol {
     private let storage: UserDefaults = .standard
     
+    private let decoder = JSONDecoder()
+    private let encoder = JSONEncoder()
+    
     private enum Keys: String {
         case gamesCount
         case totalAnswers
@@ -45,11 +48,7 @@ final class StatisticService: StatisticServiceProtocol {
     }
     
     var totalAccuracy: Double {
-        guard totalAnswers > 0 else {
-            return 0.0
-        }
-
-        return Double(totalCorrectAnswers) / Double(totalAnswers) * 100
+        totalAnswers > 0 ? Double(totalCorrectAnswers) / Double(totalAnswers) * 100 : 0.0
     }
 
     private(set) var bestGame: GameResult {
@@ -58,8 +57,6 @@ final class StatisticService: StatisticServiceProtocol {
                 return GameResult.empty
             }
             
-            let decoder = JSONDecoder()
-            
             guard let bestGame = try? decoder.decode(GameResult.self, from: bestGameData) else {
                 return GameResult.empty
             }
@@ -67,8 +64,6 @@ final class StatisticService: StatisticServiceProtocol {
             return bestGame
         }
         set {
-            let encoder = JSONEncoder()
-            
             if let bestGameData = try? encoder.encode(newValue) {
                 storage.set(bestGameData, forKey: Keys.bestGame.rawValue)
             }

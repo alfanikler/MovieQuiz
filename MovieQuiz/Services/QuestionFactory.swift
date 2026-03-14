@@ -7,7 +7,7 @@
 
 import Foundation
 
-class QuestionFactory: QuestionFactoryProtocol {
+final class QuestionFactory: QuestionFactoryProtocol {
     private let moviesLoader: MoviesLoading
     private weak var delegate: QuestionFactoryDelegate?
     
@@ -109,7 +109,7 @@ class QuestionFactory: QuestionFactoryProtocol {
             let correctAnswer = rating > 7
             
             let question = QuizQuestion(
-                image: imageData,
+                imageData: imageData,
                 text: text,
                 correctAnswer: correctAnswer
             )

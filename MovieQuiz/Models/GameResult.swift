@@ -17,11 +17,7 @@ struct GameResult: Decodable, Encodable {
     }
     
     var score: Double {
-        guard total > 0 else {
-            return 0.0
-        }
-
-        return Double(correct) / Double(total)
+        total > 0 ? Double(correct) / Double(total) : 0.0
     }
     
     func isBetterThen(_ another: GameResult) -> Bool {

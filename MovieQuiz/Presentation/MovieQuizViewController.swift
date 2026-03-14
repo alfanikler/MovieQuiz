@@ -84,7 +84,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         QuizStepViewModel(
-            image: UIImage(data: model.image) ?? UIImage(),
+            image: UIImage(data: model.imageData) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
         )
@@ -167,13 +167,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let totalAccuracy = String(format: "%.2f", statisticService.totalAccuracy)
         let bestGameDate = bestGame.date.dateTimeString
         let gamesCount = statisticService.gamesCount
-
-        let currentResultString = "Ваш результат: \(gameResult.correct)/\(gameResult.total)\n"
-        let totalGamesCountString = "Количество сыгранных квизов: \(gamesCount)\n"
-        let bestResultString = "Рекорд: \(bestGame.correct)/\(bestGame.total) (\(bestGameDate))\n"
-        let totalAccuracyString = "Средняя точность: \(totalAccuracy)%\n"
         
-        return currentResultString + totalGamesCountString + bestResultString + totalAccuracyString
+        return """
+        Ваш результат: \(gameResult.correct)/\(gameResult.total)
+        Количество сыгранных квизов: \(gamesCount)
+        Рекорд: \(bestGame.correct)/\(bestGame.total) (\(bestGameDate))
+        Средняя точность: \(totalAccuracy)%
+        """
     }
     
     private func showLoadingIndicator() {
